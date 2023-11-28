@@ -22,7 +22,7 @@ class DpdPickup
             'date' => $this->date->format('Ymd'),
             'day' => $this->date->format('N'),
             'collectionRequestAddress' => [
-                ...$this->$address->toArray(),
+                ...$this->address->toArray(),
                 'comment' => $this->comment,
             ],
         ];
