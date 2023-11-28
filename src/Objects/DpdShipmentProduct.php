@@ -19,12 +19,10 @@ class DpdShipmentProduct
         'IT',
     ];
 
-    const DPD_PRODUCT_CLASSIC = 'CL';
-    const DPD_PRODUCT_B2B = 'B2B';
-
     public function __construct(
         private readonly string $countryIso,
-        private ?string         $postalCode
+        private ?string         $postalCode,
+        private DpdProductType  $productType = DpdProductType::CLASSIC,
     )
     {
         if ($this->postalCode) {
@@ -39,11 +37,7 @@ class DpdShipmentProduct
      */
     public function getServiceProductCode(): string
     {
-        if ($this->countryIso === "FR") {
-            return self::DPD_PRODUCT_B2B;
-        }
-
-        return self::DPD_PRODUCT_CLASSIC;
+        return $this->productType->getProductCode($this->countryIso);
     }
 
     public function getPredict(string $countryIso, ?string $email, ?string $mobilePhone): ?DpdPredict
@@ -84,6 +78,19 @@ class DpdShipmentProduct
     }
 
     /**
+     * Whether it is a DPD Fresh Shipment yes/no.
+     *
+     * @return bool
+     */
+    public function isDpdFresh(): bool
+    {
+        return match($this->productType) {
+            DpdProductType::FRESH, DpdProductType::DRY, DpdProductType::FREEZE => true,
+            default => false,
+        };
+    }
+
+    /**
      * Whether the DPD Shipment can use Saturday Shipping yes/no.
      *
      * @return bool
@@ -101,6 +108,11 @@ class DpdShipmentProduct
     public function getRegionAccount(): string
     {
         return 'default';
+    }
+
+    public function getProductType(): DpdProductType
+    {
+        return $this->productType;
     }
 
     private function isValidMobilePhone(string $countryIso, ?string $mobilePhone): bool

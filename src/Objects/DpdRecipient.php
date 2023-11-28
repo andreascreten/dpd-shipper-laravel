@@ -15,6 +15,7 @@ class DpdRecipient
         public readonly string $type = 'P',
         public readonly string $name2 = '',
         public readonly string $street2 = '',
+        public readonly string $phone = '',
     )
     {
     }
@@ -26,5 +27,32 @@ class DpdRecipient
     public function isNonEuCountry(): bool
     {
         return in_array($this->countryIso, self::COUNTRIES_NON_EU, true);
+    }
+
+    public function isPrivatePerson(): bool
+    {
+        return $this->type === 'P';
+    }
+
+    public function isBusiness(): bool
+    {
+        return $this->type === 'B';
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'name1'   => $this->name1,
+            'name2'   => $this->name2,
+            'street'  => $this->street,
+            'street2' => $this->street2,
+            'houseNo' => $this->houseNumber,
+            'country' => $this->countryIso,
+            'zipCode' => $this->postalCode,
+            'city'    => $this->city,
+            'email'   => $this->email,
+            'phone'   => $this->phone,
+            'type'    => $this->type,
+        ];
     }
 }

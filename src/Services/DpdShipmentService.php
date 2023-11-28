@@ -51,6 +51,15 @@ class DpdShipmentService extends AbstractDpdService
                 'weight'                   => $parcels->getWeight(),
             ];
 
+            if ($shipmentProduct->isDpdFresh()) {
+                $parcelData['goodsExpirationDate'] = $parcels->getExpirationDate()->format('Ymd');
+
+                if($shipmentProduct->getProductType()->hasMinMaxTemperatures()) {
+                    $parcelData['goodsMinimumStorageTemperature'] = $shipmentProduct->getProductType()->getMinimumStorageTemperature();
+                    $parcelData['goodsMaximumStorageTemperature'] = $shipmentProduct->getProductType()->getMaximumStorageTemperature();
+                }
+            }
+
             // ToDo: Implement international shipping
 
             $parcelsArray[] = $parcelData;
@@ -65,25 +74,8 @@ class DpdShipmentService extends AbstractDpdService
                 'generalShipmentData'   => [
                     'sendingDepot' => $this->connector->depotNumber,
                     'product'      => $shipmentProduct->getServiceProductCode(),
-                    'sender'       => [
-                        'name1'   => $sender->name,
-                        'street'  => $sender->street,
-                        'houseNo' => $sender->houseNumber,
-                        'country' => $sender->countryIso,
-                        'zipCode' => $sender->postalCode,
-                        'city'    => $sender->city,
-                    ],
-                    'recipient'    => [
-                        'name1'   => $recipient->name1,
-                        'name2'   => $recipient->name2,
-                        'street'  => $recipient->street,
-                        'street2' => $recipient->street2,
-                        'houseNo' => $recipient->houseNumber,
-                        'country' => $recipient->countryIso,
-                        'zipCode' => $recipient->postalCode,
-                        'city'    => $recipient->city,
-                        'email'   => $recipient->email,
-                    ],
+                    'sender'       => $sender->toArray(),
+                    'recipient'    => $recipient->toArray(),
                 ],
                 'parcels'               => $parcelsArray,
                 'productAndServiceData' => [
@@ -104,6 +96,10 @@ class DpdShipmentService extends AbstractDpdService
 
         if ($shipmentProduct->useSaturdayShipping()) {
             $shipmentData['order']['productAndServiceData']['saturdayDelivery'] = true;
+        }
+
+        if ($shipmentProduct->isDpdFresh()) {
+            $shipmentData['order']['productAndServiceData']['tour'] = $shipmentProduct->getProductType()->getTour();
         }
 
         try {

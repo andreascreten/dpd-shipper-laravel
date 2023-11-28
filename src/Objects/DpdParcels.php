@@ -7,6 +7,7 @@ class DpdParcels
     private string $customer_reference_number_1 = '';
     private string $customer_reference_number_2 = '';
     private int $weight = 0;
+    private \DateTime $expiration_date;
 
     /**
      * @return string
@@ -38,6 +39,16 @@ class DpdParcels
     public function setWeight(int $weight): void
     {
         $this->weight = $weight;
+    }
+
+    public function getExpirationDate(): \DateTime
+    {
+        return $this->expiration_date;
+    }
+
+    public function setExpirationDate(\DateTime $date): void
+    {
+        $this->expiration_date = $date;
     }
 
     /**

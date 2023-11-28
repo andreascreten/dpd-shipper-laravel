@@ -15,4 +15,16 @@ class DpdSender
     {
 
     }
+
+    public function toArray(): array
+    {
+        return [
+            'name1'   => $this->name,
+            'street'  => $this->street,
+            'houseNo' => $this->houseNumber,
+            'country' => $this->countryIso,
+            'zipCode' => $this->postalCode,
+            'city'    => $this->city,
+        ];
+    }
 }
