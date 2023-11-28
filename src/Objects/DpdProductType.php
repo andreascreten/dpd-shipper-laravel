@@ -21,7 +21,7 @@ enum DpdProductType: string
     {
         return match ($this) {
             self::FRESH => 0,
-            self::FREEZE => -1800,
+            self::FREEZE => -3000,
             default => throw new \Exception('This product type does not have a minimum storage temperature.'),
         };
     }
@@ -30,7 +30,7 @@ enum DpdProductType: string
     {
         return match ($this) {
             self::FRESH => 400,
-            self::FREEZE => -3000,
+            self::FREEZE => -1800,
             default => throw new \Exception('This product type does not have a maximum storage temperature.'),
         };
     }
