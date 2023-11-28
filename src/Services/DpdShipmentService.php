@@ -2,6 +2,7 @@
 
 namespace Flooris\DpdShipper\Services;
 
+use Flooris\DpdShipper\Objects\DpdPickup;
 use Flooris\DpdShipper\Objects\DpdPaperFormat;
 use SoapFault;
 use Flooris\DpdShipper\Objects\DpdSender;
@@ -40,7 +41,8 @@ class DpdShipmentService extends AbstractDpdService
         DpdParcels         $parcels,
         DpdSender          $sender,
         DpdRecipient       $recipient,
-        ?DpdPredict        $dpdPredict
+        ?DpdPredict        $dpdPredict,
+        ?DpdPickup         $pickup,
     ): DpdShipmentLabel
     {
         $parcelsArray = [];
@@ -100,6 +102,10 @@ class DpdShipmentService extends AbstractDpdService
 
         if ($shipmentProduct->isDpdFresh()) {
             $shipmentData['order']['productAndServiceData']['tour'] = $shipmentProduct->getProductType()->getTour();
+        }
+
+        if ($pickup) {
+            $shipmentData['order']['productAndServiceData']['pickup'] = $pickup->toArray();
         }
 
         try {
