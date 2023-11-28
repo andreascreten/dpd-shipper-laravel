@@ -16,7 +16,7 @@ use Flooris\DpdShipper\Exceptions\DpdShipmentResponseException;
 class DpdShipmentService extends AbstractDpdService
 {
     const SERVICE_NAME = 'ShipmentService';
-    const SERVICE_VERSION = 'V33';
+    const SERVICE_VERSION = 'V34';
     const SERVICE_METHOD_NAME = 'storeOrders';
 
     private string $printerLanguage = 'PDF';
