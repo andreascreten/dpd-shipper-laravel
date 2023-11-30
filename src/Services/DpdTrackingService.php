@@ -42,24 +42,26 @@ class DpdTrackingService extends AbstractDpdService
             throw $e;
         } catch (\Exception $e) {
             $lastResponse = $this->getSoapLastResponse();
-            $orderId      = $parcels->getCustomerReferenceNumber1();
-            $message      = "DpdDisConnector (getTrackingData) - Parcel Label Number: {$parcelLabelNumber} - response: {$lastResponse} - unknown Exception message: ";
-            $message      .= $e->getMessage();
+            $orderId = $parcels->getCustomerReferenceNumber1();
+            $message = "DpdDisConnector (getTrackingData) - Parcel Label Number: {$parcelLabelNumber} - response: {$lastResponse} - unknown Exception message: ";
+            $message .= $e->getMessage();
 
             throw new DpdTrackingResponseException($message);
         }
 
-        if (! isset($result->trackingresult)) {
+        if (!isset($result->trackingresult)) {
             $message = "DPD API -> getTrackingData doesn't contain a trackingresult!";
 
             throw new DpdTrackingResponseException($message);
         }
 
         // In this case there is not status yet
-        if (! isset($result->trackingresult->statusInfo)) {
+        if (!isset($result->trackingresult->statusInfo)) {
             return new DpdParcelStatusInfo;
         }
 
-        return DpdParcelStatusInfo::fromDpdResponse($result->trackingresult->statusInfo);
+        $statusInfo = $result->trackingresult->statusInfo;
+
+        return DpdParcelStatusInfo::fromDpdResponse(is_array($statusInfo) ? $statusInfo : [$statusInfo]);
     }
 }
