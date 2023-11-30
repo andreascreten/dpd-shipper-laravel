@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Flooris\DpdShipper\Services\DpdLoginService;
 use Flooris\DpdShipper\Services\DpdShipmentService;
+use Flooris\DpdShipper\Services\DpdTrackingService;
 
 class DpdShipperConnector
 {
@@ -33,6 +34,11 @@ class DpdShipperConnector
         return new DpdShipmentService($this);
     }
 
+    public function trackingService(): DpdTrackingService
+    {
+        return new DpdTrackingService($this);
+    }
+
     public function getSoapAuthenticationHeader(): SOAPHeader
     {
         $soapHeaderBody = [
@@ -42,7 +48,6 @@ class DpdShipperConnector
         ];
 
         return new SOAPHeader($this->authUrl, 'authentication', $soapHeaderBody, false);
-
     }
 
     public function getApiTokenFromCache(): ?string
