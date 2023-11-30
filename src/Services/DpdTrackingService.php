@@ -49,10 +49,15 @@ class DpdTrackingService extends AbstractDpdService
             throw new DpdTrackingResponseException($message);
         }
 
-        if (! isset($result->trackingresult->statusInfo)) {
-            $message = "DPD API -> getTrackingData doesn't contain any statusInfo!";
+        if (! isset($result->trackingresult)) {
+            $message = "DPD API -> getTrackingData doesn't contain a trackingresult!";
 
             throw new DpdTrackingResponseException($message);
+        }
+
+        // In this case there is not status yet
+        if (! isset($result->trackingresult->statusInfo)) {
+            return new DpdParcelStatusInfo;
         }
 
         return DpdParcelStatusInfo::fromDpdResponse($result->trackingresult->statusInfo);
