@@ -8,7 +8,7 @@ use Flooris\DpdShipper\DpdShipperConnector;
 
 abstract class AbstractDpdService
 {
-    private ?SoapClient $client;
+    private ?SoapClient $client = null;
 
     public function __construct(
         public DpdShipperConnector $connector
